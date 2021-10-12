@@ -1,0 +1,11 @@
+name: 'Android CI/CD'
+description: 'Build your Android application and update it in the store'
+inputs:
+  keystore:
+    description: 'Base64 encoded Android keystore'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.keystore }}
