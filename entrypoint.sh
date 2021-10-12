@@ -1,10 +1,12 @@
 #!/bin/sh -l
 
 echo "Updating apt"
-apt update
+apk update
 
-echo "Installing Ruby"
-apt install ruby-full -y
+echo "Installing tools"
+apk add ruby-dev
+apk add ruby-etc
+apk add build-base
 
 echo "Installing Bundler"
 gem install bundler
