@@ -22,3 +22,6 @@ if [[ -f "$FASTFILE" ]]; then
 else
     echo "fastlane file does not exist."
 fi
+
+# Checking whether this directory contains both the user repository and also this script we copied into the docker container
+ls
