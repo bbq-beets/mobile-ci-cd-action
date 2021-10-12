@@ -4,8 +4,12 @@ inputs:
   keystore:
     description: 'Base64 encoded Android keystore'
     required: true
+  play-store-creds:
+    description: 'Your Play Store credentials'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.keystore }}
+    - ${{ inputs.play-store-creds }}
