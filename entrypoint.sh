@@ -82,6 +82,7 @@ bundle install
 echo "$KEYSTORE_ENCODED" | base64 --decode > $KEYSTORE_FILE
 
 # Run fastlane
+bundle exec fastlane update_plugins
 bundle exec fastlane android deploy
 
 # TODO always clean up, also in case of failure
