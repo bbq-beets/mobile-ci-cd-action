@@ -4,8 +4,20 @@ inputs:
   package-name:
     description: "The Android package name from the app manifest"
     required: true
+  track:
+    description: "The Play Store track to release to (internal, alpha, beta, production)"
+    required: true
   keystore:
     description: 'Base64 encoded Android keystore'
+    required: true
+  keystore-password:
+    description: "The keystore password"
+    required: true
+  key-alias:
+    description: "The alias of the signing key"
+    required: true
+  key-password:
+    description: "The password of the signing key"
     required: true
   play-store-creds:
     description: 'Your Play Store credentials'
@@ -25,8 +37,12 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.package-name }}
+    - ${{ inputs.track }}
     - ${{ inputs.keystore }}
     - ${{ inputs.play-store-creds }}
+    - ${{ inputs.keystore-password }}
+    - ${{ inputs.key-alias }}
+    - ${{ inputs.key-password }}
     - ${{ inputs.push-changes }}
     - ${{ inputs.git-user-name }}
     - ${{ inputs.git-user-email }}

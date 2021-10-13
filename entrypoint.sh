@@ -1,15 +1,21 @@
 #!/bin/sh -l
 
 PACKAGE_NAME=$1
-KEY_STORE=$2
-PLAY_STORE_CREDS=$3
-PUSH_CHANGES=$4
-GIT_USER_NAME=$5
-GIT_USER_EMAIL=$6
+TRACK=$2
+KEYSTORE_ENCODED=$3
+PLAY_STORE_CREDS=$4
+KEYSTORE_PASSWORD=$5
+KEY_ALIAS=$6
+KEY_PASSWORD=$7
+PUSH_CHANGES=$8
+GIT_USER_NAME=$9
+GIT_USER_EMAIL=$10
 
 PROJECT_ROOT=$GITHUB_WORKSPACE
 FASTLANEDIR=$PROJECT_ROOT/fastlane
-JSON_KEY_FILE=/play-store-credentials.json
+SECRETS_DIR=/secrets
+JSON_KEY_FILE=$SECRETS_DIR/play-store-credentials.json
+KEYSTORE_FILE=$SECRETS_DIR/keystore.jks
 
 cd $PROJECT_ROOT
 
@@ -54,13 +60,31 @@ else
     echo "Appfile already exists; not taking any action"
 fi
 
-# TODO Fastfile. This one might be quite big with only little pieces replaced by variable inputs,
-# so we should find a nice way of coding that
+if [[ ! -f "Fastfile" ]]; then
+    echo "Copying Fastfile"
+    cp /fastlane/Fastfile Fastfile
+else
+    echo "Fastfile already exists; not taking any action"
+fi
+
+if [[ ! -f "Pluginfile" ]]; then
+    echo "Copying Pluginfile"
+    cp /fastlane/Pluginfile Pluginfile
+else
+    echo "Pluginfile already exists; TODO add the plugin we need if it isn't in there"
+fi
 
 echo "Running Bundler"
 bundle install
 
+echo "$KEYSTORE_ENCODED" | base64 --decode > $KEYSTORE_FILE
+
 # Run fastlane
+bundle exec fastlane android deploy
+
+# TODO always clean up, also in case of failure
+rm $JSON_KEY_FILE
+rm $KEYSTORE_FILE
 
 # Commit and push specific changes
 if [[ $PUSH_CHANGES ]]; then
@@ -71,6 +95,7 @@ if [[ $PUSH_CHANGES ]]; then
     git add $PROJECT_ROOT/Gemfile
     git add $FASTLANEDIR/Appfile
     git add $FASTLANEDIR/Fastfile
+    git add $FASTLANEDIR/Pluginfile
     git commit -m "Configure fastlane"
     # TODO We probably don't have the right to push...
 fi
