@@ -53,7 +53,7 @@ fi
 if [[ ! -f "Appfile" ]]; then
     echo "Creating Appfile"
     touch $FASTLANEDIR/Appfile
-    echo '$PLAY_STORE_CREDS' > $JSON_KEY_FILE
+    echo "$PLAY_STORE_CREDS" > $JSON_KEY_FILE
     echo 'json_key_file("'$JSON_KEY_FILE'")' >> $FASTLANEDIR/Appfile
     echo 'package_name("'$PACKAGE_NAME'")' >> $FASTLANEDIR/Appfile
 else
@@ -62,14 +62,14 @@ fi
 
 if [[ ! -f "Fastfile" ]]; then
     echo "Copying Fastfile"
-    cp /fastlane/Fastfile Fastfile
+    cp /fastlane/Fastfile $FASTLANEDIR/Fastfile
 else
     echo "Fastfile already exists; not taking any action"
 fi
 
 if [[ ! -f "Pluginfile" ]]; then
     echo "Copying Pluginfile"
-    cp /fastlane/Pluginfile Pluginfile
+    cp /fastlane/Pluginfile $FASTLANEDIR/Pluginfile
 else
     echo "Pluginfile already exists; TODO add the plugin we need if it isn't in there"
 fi
@@ -83,8 +83,7 @@ echo "$KEYSTORE_ENCODED" | base64 --decode > $KEYSTORE_FILE
 bundle exec fastlane android deploy
 
 # TODO always clean up, also in case of failure
-rm $JSON_KEY_FILE
-rm $KEYSTORE_FILE
+rm -r $SECRETS_DIR
 
 # Commit and push specific changes
 if [[ $PUSH_CHANGES ]]; then
