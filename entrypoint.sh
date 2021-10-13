@@ -7,8 +7,11 @@ PUSH_CHANGES=$4
 GIT_USER_NAME=$5
 GIT_USER_EMAIL=$6
 
-FASTLANEDIR=$GITHUB_WORKSPACE/fastlane
+PROJECT_ROOT=$GITHUB_WORKSPACE
+FASTLANEDIR=$PROJECT_ROOT/fastlane
 JSON_KEY_FILE=/play-store-credentials.json
+
+cd $PROJECT_ROOT
 
 echo "Updating apk"
 apk update
@@ -65,9 +68,9 @@ if [[ $PUSH_CHANGES ]]; then
     git config --global user.email $GIT_USER_EMAIL
     # TODO do we care which branch we're on?
     # TODO do we want to commit Gemfile.lock?
-    git add $GITHUB_WORKSPACE/Gemfile
-    git add ./$FASTLANEDIR/Appfile
-    git add ./$FASTLANEDIR/Fastfile
+    git add $PROJECT_ROOT/Gemfile
+    git add $FASTLANEDIR/Appfile
+    git add $FASTLANEDIR/Fastfile
     git commit -m "Configure fastlane"
     # TODO We probably don't have the right to push...
 fi
