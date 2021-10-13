@@ -1,6 +1,9 @@
 name: 'Android CI/CD'
 description: 'Build your Android application and update it in the store'
 inputs:
+  package-name:
+    description: "The Android package name from the app manifest"
+    required: true
   keystore:
     description: 'Base64 encoded Android keystore'
     required: true
@@ -11,5 +14,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
+    - ${{ inputs.package-name }}
     - ${{ inputs.keystore }}
     - ${{ inputs.play-store-creds }}

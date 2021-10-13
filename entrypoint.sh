@@ -1,21 +1,33 @@
 #!/bin/sh -l
 
-KEY_STORE=$1
-PLAY_STORE_CREDS=$2
+PACKAGE_NAME=$1
+KEY_STORE=$2
+PLAY_STORE_CREDS=$3
 
 FASTLANEDIR=fastlane
 JSON_KEY_FILE=$FASTLANEDIR/play-store-credentials.json
 
-echo "Updating apt"
+echo "Updating apk"
 apk update
 
 echo "Installing packages"
 apk add ruby-dev
 apk add ruby-full
 apk add build-base
+apk add git
 
 echo "Installing Bundler"
-gem install  --no-ri --no-rdoc bundler
+gem install --no-ri --no-rdoc bundler
+
+if [[ ! -f "Gemfile" ]]; then
+    echo "Copying Gemfile"
+    cp /fastlane/Gemfile Gemfile
+else
+    # Add fastlane to the exising gemfile if it isn't referenced (including as a dependency)
+    if ! bundle list | grep 'fastlane'; then
+        bundle add fastlane
+    fi
+fi
 
 if [[ ! -d "$FASTLANEDIR" ]]; then
     echo "Creating $FASTLANEDIR dir"
@@ -25,18 +37,13 @@ fi
 cd $FASTLANEDIR
 echo "In $FASTLANEDIR"
 
-if [[ ! -f "Gemfile" ]]; then
-    echo "Copying Gemfile"
-    cp /fastlane/Gemfile Gemfile
-fi
-
 echo $PLAY_STORE_CREDS > /play-store-credentials.json
 
 if [[ ! -f "Appfile" ]]; then
     echo "Creating Appfile"
     touch Appfile
     echo json_key_file("/play-store-credentials.json") >> Appfile
-    echo package_name("com.octogame") >> Appfile # TODO
+    echo package_name("$PACKAGE_NAME") >> Appfile # TODO
 fi
 
 # TODO Fastfile. This one might be quite big with only little pieces replaced by variable inputs,
@@ -45,6 +52,15 @@ fi
 echo "Running Bundler"
 bundle install
 
-# TODO Run fastlane
+# Run fastlane
 
-tail -f /dev/null
+# Commit and push specific changes
+cd $GITHUB_WORKSPACE
+# TODO git config --global user.name
+# TODO git config --global user.email
+# TODO do we care which branch we're on?
+# TODO do we want to commit Gemfile.lock?
+git add ./$FASTLANEDIR/Appfile
+git add ./$FASTLANEDIR/Fastfile
+git commit -m "Configure fastlane"
+# TODO We probably don't have the right to push...
