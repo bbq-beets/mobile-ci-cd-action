@@ -29,6 +29,9 @@ apk add ruby-dev
 apk add ruby-full
 apk add build-base
 apk add git
+apk add openjdk8
+
+JAVA_HOME=/usr/lib/jvm/default-jvm/
 
 echo "Installing Bundler"
 gem install --no-ri --no-rdoc bundler
@@ -82,7 +85,6 @@ bundle install
 echo "$KEYSTORE_ENCODED" | base64 --decode > $KEYSTORE_FILE
 
 # Run fastlane
-bundle exec fastlane update_plugins
 bundle exec fastlane android deploy
 
 # TODO always clean up, also in case of failure
