@@ -10,6 +10,16 @@ inputs:
   play-store-creds:
     description: 'Your Play Store credentials'
     required: true
+  push-changes:
+    description: 'Whether commit and push the created fastlane configuration'
+    required: false
+    default: false
+  git-user-name:
+    description: 'Required when push-changes is set, the git user.name'
+    required: false
+  git-user-email:
+    description: 'Required when push-changes is set, the git user.email'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -17,3 +27,6 @@ runs:
     - ${{ inputs.package-name }}
     - ${{ inputs.keystore }}
     - ${{ inputs.play-store-creds }}
+    - ${{ inputs.push-changes }}
+    - ${{ inputs.git-user-name }}
+    - ${{ inputs.git-user-email }}
