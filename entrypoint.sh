@@ -7,8 +7,8 @@ PUSH_CHANGES=$4
 GIT_USER_NAME=$5
 GIT_USER_EMAIL=$6
 
-FASTLANEDIR=fastlane
-JSON_KEY_FILE=$FASTLANEDIR/play-store-credentials.json
+FASTLANEDIR=$GITHUB_WORKSPACE/fastlane
+JSON_KEY_FILE=/play-store-credentials.json
 
 echo "Updating apk"
 apk update
@@ -44,9 +44,9 @@ fi
 if [[ ! -f "Appfile" ]]; then
     echo "Creating Appfile"
     touch $FASTLANEDIR/Appfile
-    echo '$PLAY_STORE_CREDS' > /play-store-credentials.json
-    echo 'json_key_file("/play-store-credentials.json")' >> $FASTLANEDIR/Appfile
-    echo 'package_name("$PACKAGE_NAME")' >> $FASTLANEDIR/Appfile
+    echo '$PLAY_STORE_CREDS' > $JSON_KEY_FILE
+    echo 'json_key_file("'$JSON_KEY_FILE'")' >> $FASTLANEDIR/Appfile
+    echo 'package_name("'$PACKAGE_NAME'")' >> $FASTLANEDIR/Appfile
 else
     echo "Appfile already exists; not taking any action"
 fi
@@ -65,7 +65,7 @@ if [[ $PUSH_CHANGES ]]; then
     git config --global user.email $GIT_USER_EMAIL
     # TODO do we care which branch we're on?
     # TODO do we want to commit Gemfile.lock?
-    git add ./Gemfile
+    git add $GITHUB_WORKSPACE/Gemfile
     git add ./$FASTLANEDIR/Appfile
     git add ./$FASTLANEDIR/Fastfile
     git commit -m "Configure fastlane"
