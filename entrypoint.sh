@@ -19,6 +19,8 @@ KEYSTORE_FILE=$SECRETS_DIR/keystore.jks
 
 cd $PROJECT_ROOT
 
+mkdir $SECRETS_DIR
+
 echo "Updating apk"
 apk update
 
