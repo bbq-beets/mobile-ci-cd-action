@@ -37,13 +37,13 @@ fi
 cd $FASTLANEDIR
 echo "In $FASTLANEDIR"
 
-echo $PLAY_STORE_CREDS > /play-store-credentials.json
+echo '$PLAY_STORE_CREDS' > /play-store-credentials.json
 
 if [[ ! -f "Appfile" ]]; then
     echo "Creating Appfile"
     touch Appfile
-    echo json_key_file("/play-store-credentials.json") >> Appfile
-    echo package_name("$PACKAGE_NAME") >> Appfile
+    echo 'json_key_file("/play-store-credentials.json")' >> Appfile
+    echo 'package_name("$PACKAGE_NAME")' >> Appfile
 fi
 
 # TODO Fastfile. This one might be quite big with only little pieces replaced by variable inputs,
