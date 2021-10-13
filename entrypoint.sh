@@ -61,8 +61,8 @@ bundle install
 
 # Commit and push specific changes
 if [[ $PUSH_CHANGES ]]; then
-    git config --global $GIT_USER_NAME
-    git config --global $GIT_USER_EMAIL
+    git config --global user.name $GIT_USER_NAME
+    git config --global user.email $GIT_USER_EMAIL
     # TODO do we care which branch we're on?
     # TODO do we want to commit Gemfile.lock?
     git add ./Gemfile
