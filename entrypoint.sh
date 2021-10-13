@@ -43,7 +43,7 @@ if [[ ! -f "Appfile" ]]; then
     echo "Creating Appfile"
     touch Appfile
     echo json_key_file("/play-store-credentials.json") >> Appfile
-    echo package_name("$PACKAGE_NAME") >> Appfile # TODO
+    echo package_name("$PACKAGE_NAME") >> Appfile
 fi
 
 # TODO Fastfile. This one might be quite big with only little pieces replaced by variable inputs,
